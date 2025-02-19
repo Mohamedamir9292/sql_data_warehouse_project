@@ -1,6 +1,11 @@
 -- Create Database'DataWarehouse'
 
-
+=======================================================
+-- stored Procedure: Load Bronze Layer (Source > Bronze)
+=======================================================
+-- Script Purpose: this script loads data into the Bronze Schema from external CSV files.
+=========================================================================================
+  
 create or alter procedure bronze.load_bronze as
 begin
 
