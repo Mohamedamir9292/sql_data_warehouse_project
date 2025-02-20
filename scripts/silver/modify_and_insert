@@ -26,8 +26,7 @@ from
 (select *, ROW_NUMBER() over(partition by cst_id order by cst_create_date desc) as ranking 
 from bronze.crm_cust_info
 where cst_id is not null) as t1
-where ranking = 1
-;
+where ranking = 1;
 --------------------------------------------------------------------
 second table "silver.crm_prd_info"
 ====================================================================
@@ -87,7 +86,7 @@ sls_quantity,
 case when sls_price <= 0 or sls_price is null or sls_price != abs(sls_sales) / sls_quantity
 	then abs(sls_sales) / nullif(sls_quantity, 0)
 	else sls_price  end as sls_price
-from bronze.crm_sales_details
+from bronze.crm_sales_details;
 -----------------------------------------------------------------------
 fourth table "silver.erp_cust_az12"
 =======================================================================
@@ -97,14 +96,15 @@ cid,
 bdate,
 gen)
 
-select case when len(cid) > 10 then substring(cid, 4, 10)
+select case when len(cid) > 10 then substring(cid, 4, len(cid))
 	else cid end as cid,
 case when bdate > getdate() then null 
 else bdate end as bdate,
-case when gen = null or gen = '' then 'Unkown'
-	when gen = 'F' then 'Female'
-	when gen = 'M' then 'Male' 
-	else gen end as gen
+case 
+	
+	when upper(trim(gen)) = 'F' then 'Female'
+	when upper(trim(gen)) = 'M' then 'Male' 
+	else 'Unkown' end as gen
 from bronze.erp_cust_az12;
 -----------------------------------------------------------------------
 fifth table "silver.erp_loc_a101
@@ -119,7 +119,7 @@ case when cntry = '' then 'Unkown'
 	when cntry = 'US' or cntry = 'USA' then 'United States'
 	when cntry = 'DE' then 'Denmark'
 	else cntry end as cntry
-from bronze.erp_loc_a101
+from bronze.erp_loc_a101;
 ----------------------------------------------------------------------
 
 
