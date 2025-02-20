@@ -97,8 +97,10 @@ cid,
 bdate,
 gen)
 
-select cid,
-bdate,
+select case when len(cid) > 10 then substring(cid, 4, 10)
+	else cid end as cid,
+case when bdate > getdate() then null 
+else bdate end as bdate,
 case when gen = null or gen = '' then 'Unkown'
 	when gen = 'F' then 'Female'
 	when gen = 'M' then 'Male' 
