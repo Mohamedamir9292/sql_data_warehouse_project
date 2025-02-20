@@ -114,7 +114,7 @@ cid,
 cntry
 )
 select 
-cid,
+replace(cid, '-', '') as cid,
 case when cntry = '' then 'Unkown'
 	when cntry = 'US' or cntry = 'USA' then 'United States'
 	when cntry = 'DE' then 'Denmark'
