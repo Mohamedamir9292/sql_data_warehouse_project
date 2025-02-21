@@ -21,6 +21,25 @@ left join silver.erp_cust_az12 ca
 on  ci.cst_key = ca.cid
 left join silver.erp_loc_a101 cl
 on  ci.cst_key = cl.cid
---------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+products dimension table:
+========================================================================================
+create view gold.dim_product as
+ select 
+ row_number() over(order by prin.prd_start_dt, prin.prd_key) as product_key, --create a surrogate key to connect to other tables
+ prin.prd_id as product_id,
+ prin.prd_key as product_number,
+ prin.prd_nm as product_name,
+ prin.cat_id as category_id, 
+ prin2.cat as category, 
+ prin2.subcat as subcategory,
+ prin2.maintenance as maintenance_required,
+ prin.prd_cost as product_cost,
+ prin.prd_line as product_line, 
+ prin.prd_start_dt as start_date
+from silver.crm_prd_info prin 
+left join  silver.erp_px_cat_g1v2 prin2
+on   prin.cat_id = prin2.id 
+where prd_end_dt is null 
 
 
