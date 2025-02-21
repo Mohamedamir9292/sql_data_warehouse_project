@@ -1,6 +1,6 @@
---in this layer we create views to combine the multiple dimension tables into one table
+--in this layer we create views to combine the multiple dimension tables into one view
 =======================================================================================
-customers dimension table:
+customers dimension view:
 =======================================================================================
 create view gold.dim_customers as
 
@@ -22,7 +22,7 @@ on  ci.cst_key = ca.cid
 left join silver.erp_loc_a101 cl
 on  ci.cst_key = cl.cid
 ----------------------------------------------------------------------------------------
-products dimension table:
+products dimension view:
 ========================================================================================
 create view gold.dim_product as
  select 
@@ -41,5 +41,25 @@ from silver.crm_prd_info prin
 left join  silver.erp_px_cat_g1v2 prin2
 on   prin.cat_id = prin2.id 
 where prd_end_dt is null 
+----------------------------------------------------------------------------------------
+sales fact view:
+========================================================================================
+create view gold.fact_sales as
 
+ select 
+ sls_ord_num as order_number,
+ pv.producet_key,
+ cv.customer_key,
+ sls_order_dt as order_date, 
+ sls_ship_dt as ship_date,
+ sls_due_dt as due_date,
+ sls_sales as sales_amount,
+ sls_quantity as quantity, 
+ sls_price as sales_price
+ from silver.crm_sales_details st
+ left join gold.dim_product pv
+ on st.sls_prd_key = pv.product_number
+ left join gold.dim_customers cv
+ on st.sls_cust_id = cv.customer_id
+---------------------------------------------------------------------------------------
 
